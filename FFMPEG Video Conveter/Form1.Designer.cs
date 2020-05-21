@@ -61,7 +61,6 @@ namespace FFMPEG_Video_Conveter
             this.CMD_Output_Box.Name = "CMD_Output_Box";
             this.CMD_Output_Box.Size = new System.Drawing.Size(1289, 174);
             this.CMD_Output_Box.TabIndex = 2;
-            this.CMD_Output_Box.TextChanged += new System.EventHandler(this.CMD_Output_Box_TextChanged);
             // 
             // Generate_Button
             // 

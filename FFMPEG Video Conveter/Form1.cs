@@ -9,6 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+/// TODO:
+/// modify ffmpeg code to do batches
+///     could also put each convert into a loop
+///   need progress displayed somewhere?
+///   function to edit the ffmpeg script 
+///   organise and clean up code
+/// 
+/// END TODO
+
 namespace FFMPEG_Video_Conveter
 {
     public partial class Form1 : Form
@@ -36,8 +46,6 @@ namespace FFMPEG_Video_Conveter
 
         public void Main()
         {
-            //setStrs();
-            //getFileName();
 
         }
 
@@ -113,44 +121,27 @@ namespace FFMPEG_Video_Conveter
 
         private void ConvertFiles()
         {
-
             System.Diagnostics.Process StartCMD = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal/*Normal or Hidden*/;
-            //startInfo.RedirectStandardInput = true;
-            //startInfo.RedirectStandardOutput = true;
             startInfo.FileName = "cmd.exe";
             startInfo.Arguments = FULL_CMD;
-            //startInfo.Arguments = "/C ipconfig";
             StartCMD.StartInfo = startInfo;
             StartCMD.Start();
-            //StartCMD.StandardInput.Flush();
-            //StartCMD.StandardInput.Close();
-            //StartCMD.WaitForExit();
-
-
-            //System.Diagnostics.Process StartCMD = new System.Diagnostics.Process();
-            //StartCMD.StartInfo.FileName = "cmd.exe";
-            //StartCMD.StartInfo.CreateNoWindow = true;
-            //StartCMD.Start();
-            //StartCMD.StandardInput.WriteLine("ipconfig");
-            //StartCMD.StandardInput.Flush();
-            //StartCMD.StandardInput.Close();
-            //StartCMD.WaitForExit();
 
         }
 
         private void Generate_Button_Click(object sender, EventArgs e)
         {
+            CMD_Output_Box.Clear();
             setStrs();
             generateCMD();
-            //CMD_Output_Box.Clear();
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             ConvertFiles();
-
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -159,26 +150,15 @@ namespace FFMPEG_Video_Conveter
             CMD_Output_Box.Text += FileExtension + Environment.NewLine;
         }
 
-        private void CMD_Output_Box_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void Browse_Output_Button_Click(object sender, EventArgs e)
         {
 
             if (FileDirectory != null) { outputBrowser.SelectedPath = FileDirectory; }
 
-            //InitialDirectory
-            //FolderBrowserDialog
-
-
             if (outputBrowser.ShowDialog() == DialogResult.OK)
             {
                 Output_Directory_Box.Text = outputBrowser.SelectedPath;
 
-                //outputBrowser.SelectedPath = FileDirectory;
-                //FileDirectory = outputBrowser.SelectedPath;
             }
         }
     }
