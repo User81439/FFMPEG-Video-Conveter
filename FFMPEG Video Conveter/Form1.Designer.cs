@@ -41,6 +41,9 @@ namespace FFMPEG_Video_Conveter
             this.Output_Directory_Label = new System.Windows.Forms.Label();
             this.Output_Directory_Box = new System.Windows.Forms.TextBox();
             this.Browse_Output_Button = new System.Windows.Forms.Button();
+            this.Load_FFMPEG_Button = new System.Windows.Forms.Button();
+            this.Load_FFMPEG_Label = new System.Windows.Forms.Label();
+            this.FFMPEG_Script_Box = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // File_Input
@@ -91,7 +94,8 @@ namespace FFMPEG_Video_Conveter
             ".mp4",
             ".mov"});
             this.Select_Extension.SelectedIndex = 0;
-            //this.Select_Extension.SelectedIndex = 0;
+            this.Select_Extension.SelectedItem = "mkv";
+            this.Select_Extension.SelectedText = "mkv";
             this.Select_Extension.Location = new System.Drawing.Point(139, 351);
             this.Select_Extension.Name = "Select_Extension";
             this.Select_Extension.Size = new System.Drawing.Size(75, 21);
@@ -140,7 +144,6 @@ namespace FFMPEG_Video_Conveter
             // 
             this.Output_Directory_Box.Location = new System.Drawing.Point(228, 386);
             this.Output_Directory_Box.Name = "Output_Directory_Box";
-            //this.Output_Directory_Box.Text = "Select...";
             this.Output_Directory_Box.Size = new System.Drawing.Size(1073, 20);
             this.Output_Directory_Box.TabIndex = 10;
             // 
@@ -154,11 +157,40 @@ namespace FFMPEG_Video_Conveter
             this.Browse_Output_Button.UseVisualStyleBackColor = true;
             this.Browse_Output_Button.Click += new System.EventHandler(this.Browse_Output_Button_Click);
             // 
+            // Load_FFMPEG_Button
+            // 
+            this.Load_FFMPEG_Button.Location = new System.Drawing.Point(138, 420);
+            this.Load_FFMPEG_Button.Name = "Load_FFMPEG_Button";
+            this.Load_FFMPEG_Button.Size = new System.Drawing.Size(75, 23);
+            this.Load_FFMPEG_Button.TabIndex = 12;
+            this.Load_FFMPEG_Button.Text = "Load";
+            this.Load_FFMPEG_Button.UseVisualStyleBackColor = true;
+            this.Load_FFMPEG_Button.Click += new System.EventHandler(this.Load_FFMPEG_Button_Click);
+            // 
+            // Load_FFMPEG_Label
+            // 
+            this.Load_FFMPEG_Label.AutoSize = true;
+            this.Load_FFMPEG_Label.Location = new System.Drawing.Point(9, 424);
+            this.Load_FFMPEG_Label.Name = "Load_FFMPEG_Label";
+            this.Load_FFMPEG_Label.Size = new System.Drawing.Size(114, 13);
+            this.Load_FFMPEG_Label.TabIndex = 13;
+            this.Load_FFMPEG_Label.Text = "Modify FFMPEG Script";
+            // 
+            // FFMPEG_Script_Box
+            // 
+            this.FFMPEG_Script_Box.Location = new System.Drawing.Point(228, 422);
+            this.FFMPEG_Script_Box.Name = "FFMPEG_Script_Box";
+            this.FFMPEG_Script_Box.Size = new System.Drawing.Size(1073, 20);
+            this.FFMPEG_Script_Box.TabIndex = 14;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1313, 555);
+            this.Controls.Add(this.FFMPEG_Script_Box);
+            this.Controls.Add(this.Load_FFMPEG_Label);
+            this.Controls.Add(this.Load_FFMPEG_Button);
             this.Controls.Add(this.Browse_Output_Button);
             this.Controls.Add(this.Output_Directory_Box);
             this.Controls.Add(this.Output_Directory_Label);
@@ -190,6 +222,9 @@ namespace FFMPEG_Video_Conveter
         private System.Windows.Forms.Label Output_Directory_Label;
         private System.Windows.Forms.TextBox Output_Directory_Box;
         private System.Windows.Forms.Button Browse_Output_Button;
+        private Button Load_FFMPEG_Button;
+        private Label Load_FFMPEG_Label;
+        private TextBox FFMPEG_Script_Box;
     }
 }
 

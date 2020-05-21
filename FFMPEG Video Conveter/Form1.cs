@@ -16,6 +16,15 @@ using System.Windows.Forms;
 ///   need progress displayed somewhere?
 ///   function to edit the ffmpeg script 
 ///   organise and clean up code
+///   
+/// finish up load ffmpeg script
+///     use superclass to inherit if changed?
+///     needs push back once edited
+///     
+/// find out why Select_Extension (Form1.Designer) keeps removing index..;
+///     this.Select_Extension.SelectedIndex = 0;
+///     
+/// delete dragged in files
 /// 
 /// END TODO
 
@@ -160,6 +169,12 @@ namespace FFMPEG_Video_Conveter
                 Output_Directory_Box.Text = outputBrowser.SelectedPath;
 
             }
+        }
+
+        private void Load_FFMPEG_Button_Click(object sender, EventArgs e)
+        {
+            setStrs();
+            FFMPEG_Script_Box.Text = FFMPEG_String;
         }
     }
 }
