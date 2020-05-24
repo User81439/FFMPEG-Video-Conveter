@@ -45,6 +45,10 @@ namespace FFMPEG_Video_Conveter
             this.Load_FFMPEG_Label = new System.Windows.Forms.Label();
             this.FFMPEG_Script_Box = new System.Windows.Forms.TextBox();
             this.Conversion_Progress = new System.Windows.Forms.ProgressBar();
+            this.Suffix_CheckBox = new System.Windows.Forms.CheckBox();
+            this.Prefix_CheckBox = new System.Windows.Forms.CheckBox();
+            this.Suffix_TextBox = new System.Windows.Forms.TextBox();
+            this.Prefix_TextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // File_Input
@@ -84,7 +88,8 @@ namespace FFMPEG_Video_Conveter
             this.Convert_Button.TabIndex = 4;
             this.Convert_Button.Text = "Convert";
             this.Convert_Button.UseVisualStyleBackColor = true;
-            this.Convert_Button.Click += new System.EventHandler(this.button1_Click);
+            this.Convert_Button.Visible = false;
+            this.Convert_Button.Click += new System.EventHandler(this.Convert_Button_Click);
             // 
             // Select_Extension
             // 
@@ -93,13 +98,12 @@ namespace FFMPEG_Video_Conveter
             this.Select_Extension.Items.AddRange(new object[] {
             ".mkv",
             ".mp4",
-            ".mov"});
-            this.Select_Extension.SelectedIndex = 0;
+            ".mov",
+            ".m4v"});
             this.Select_Extension.Location = new System.Drawing.Point(139, 351);
             this.Select_Extension.Name = "Select_Extension";
             this.Select_Extension.Size = new System.Drawing.Size(75, 21);
             this.Select_Extension.TabIndex = 5;
-            this.Select_Extension.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // Drag_Files_Label
             // 
@@ -189,11 +193,53 @@ namespace FFMPEG_Video_Conveter
             this.Conversion_Progress.Size = new System.Drawing.Size(500, 23);
             this.Conversion_Progress.TabIndex = 15;
             // 
+            // Suffix_CheckBox
+            // 
+            this.Suffix_CheckBox.AutoSize = true;
+            this.Suffix_CheckBox.Location = new System.Drawing.Point(138, 450);
+            this.Suffix_CheckBox.Name = "Suffix_CheckBox";
+            this.Suffix_CheckBox.Size = new System.Drawing.Size(52, 17);
+            this.Suffix_CheckBox.TabIndex = 16;
+            this.Suffix_CheckBox.Text = "Suffix";
+            this.Suffix_CheckBox.UseVisualStyleBackColor = true;
+            this.Suffix_CheckBox.CheckedChanged += new System.EventHandler(this.Suffix_CheckBox_CheckedChanged);
+            // 
+            // Prefix_CheckBox
+            // 
+            this.Prefix_CheckBox.AutoSize = true;
+            this.Prefix_CheckBox.Location = new System.Drawing.Point(138, 474);
+            this.Prefix_CheckBox.Name = "Prefix_CheckBox";
+            this.Prefix_CheckBox.Size = new System.Drawing.Size(52, 17);
+            this.Prefix_CheckBox.TabIndex = 17;
+            this.Prefix_CheckBox.Text = "Prefix";
+            this.Prefix_CheckBox.UseVisualStyleBackColor = true;
+            this.Prefix_CheckBox.CheckedChanged += new System.EventHandler(this.Prefix_CheckBox_CheckedChanged);
+            // 
+            // Suffix_TextBox
+            // 
+            this.Suffix_TextBox.Location = new System.Drawing.Point(228, 450);
+            this.Suffix_TextBox.Name = "Suffix_TextBox";
+            this.Suffix_TextBox.Size = new System.Drawing.Size(500, 20);
+            this.Suffix_TextBox.TabIndex = 18;
+            this.Suffix_TextBox.Visible = false;
+            // 
+            // Prefix_TextBox
+            // 
+            this.Prefix_TextBox.Location = new System.Drawing.Point(228, 476);
+            this.Prefix_TextBox.Name = "Prefix_TextBox";
+            this.Prefix_TextBox.Size = new System.Drawing.Size(500, 20);
+            this.Prefix_TextBox.TabIndex = 19;
+            this.Prefix_TextBox.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 555);
+            this.Controls.Add(this.Prefix_TextBox);
+            this.Controls.Add(this.Suffix_TextBox);
+            this.Controls.Add(this.Prefix_CheckBox);
+            this.Controls.Add(this.Suffix_CheckBox);
             this.Controls.Add(this.Conversion_Progress);
             this.Controls.Add(this.FFMPEG_Script_Box);
             this.Controls.Add(this.Load_FFMPEG_Label);
@@ -233,6 +279,10 @@ namespace FFMPEG_Video_Conveter
         private Label Load_FFMPEG_Label;
         private TextBox FFMPEG_Script_Box;
         private ProgressBar Conversion_Progress;
+        private CheckBox Suffix_CheckBox;
+        private CheckBox Prefix_CheckBox;
+        private TextBox Suffix_TextBox;
+        private TextBox Prefix_TextBox;
     }
 }
 

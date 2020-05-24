@@ -1,34 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
 /// TODO:
-///   need progress displayed somewhere?
-///   organise and clean up code
-///   
-///     
-/// find out why Select_Extension (Form1.Designer) keeps removing index..;
-///     this.Select_Extension.SelectedIndex = 0;
-///     
-/// find out why FFMPEG_String sometimes isnt set
-///     
+///   organise and clean up code | -> convert to OO
+///  
 /// delete dragged in files
 /// 
+/// WORKING FUNCTIONALLY, UX KIND OF SHITTY
 /// END TODO
 
 namespace FFMPEG_Video_Conveter
 {
     public partial class Form1 : Form
     {
-
         private string Input_File;
         private string Output_File;
 
@@ -37,14 +25,14 @@ namespace FFMPEG_Video_Conveter
         private string FULL_CMD;
 
         private string[] FileNames;
-        //private string[] ;
 
         List<string> FFMPEG_CMD = new List<string>();
 
         private string FileExtension;
         private string FileNameRAW;
         private string FileDirectory;
-        private string FileConvertedID;
+        private string FileConvertedSuffix = " HEVC";
+        private string FileConvertedPrefix = "example ";
 
         FolderBrowserDialog outputBrowser = new FolderBrowserDialog();
 
@@ -60,6 +48,7 @@ namespace FFMPEG_Video_Conveter
 
         private void listBox1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
         {
+            Select_Extension.SelectedIndex = 0;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.All;
             else
@@ -74,7 +63,6 @@ namespace FFMPEG_Video_Conveter
             for (i = 0; i < FileNames.Length; i++)
             {
                 File_Input.Items.Add(FileNames[i]);
-                //Console.WriteLine(FileNames[i]); //testing
             }
         }
 
@@ -83,13 +71,10 @@ namespace FFMPEG_Video_Conveter
             FileExtension = Path.GetExtension(Input_File);
             FileNameRAW = Path.GetFileNameWithoutExtension(Input_File);
             FileDirectory = Path.GetDirectoryName(Input_File);
-            FileConvertedID = " HEVC";
 
-            FileExtension = Select_Extension.SelectedItem.ToString();
+            SetFileVariables();
 
-            if (Output_Directory_Box.Text != "") { FileDirectory = outputBrowser.SelectedPath; }
-
-            string New_File = FileDirectory + "\\" + FileNameRAW + FileConvertedID + FileExtension;
+            string New_File = FileDirectory + "\\" + FileConvertedPrefix + FileNameRAW + FileConvertedSuffix + FileExtension;
             
             return New_File;
         }
@@ -105,7 +90,7 @@ namespace FFMPEG_Video_Conveter
 
             else
             {
-
+                FFMPEG_CMD.Clear();
                 for (int i = 0; i < FileNames.Length; i++)
                 {
                     Input_File = FileNames[i];
@@ -120,8 +105,23 @@ namespace FFMPEG_Video_Conveter
                     CMD_Output_Box.Text += FFMPEG_CMD[i].ToString();
 
                 }
+
+                Convert_Button.Visible = true;
             }
 
+        }
+
+        private void SetFileVariables()
+        {
+            FileExtension = Select_Extension.SelectedItem.ToString();
+
+            if (FFMPEG_Script_Box.Text != "") { FFMPEG_String = FFMPEG_Script_Box.Text; } //get changed script from script Load button box
+
+            if (Output_Directory_Box.Text != "") { FileDirectory = outputBrowser.SelectedPath; } //get different output directory
+
+            if (Prefix_CheckBox.Checked) { Suffix_TextBox.Visible = true;  FileConvertedPrefix = Prefix_TextBox.Text; } else { FileConvertedPrefix = ""; } //get file prefix
+
+            if (Suffix_CheckBox.Checked) { FileConvertedSuffix = Suffix_TextBox.Text; } else { FileConvertedSuffix = ""; } //get file suffix
         }
 
         private void ConvertFiles(string FFMPEG_Script)
@@ -134,43 +134,57 @@ namespace FFMPEG_Video_Conveter
             StartCMD.StartInfo = startInfo;
             StartCMD.Start();
             StartCMD.WaitForExit();
-
         }
 
         private void Generate_Button_Click(object sender, EventArgs e)
         {
             CMD_Output_Box.Clear();
-            FFMPEG_String = FFMPEG_Script_Box.Text;
-            generateCMD();
             
+            generateCMD();
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Convert_Button_Click(object sender, EventArgs e)
         {
-            CMD_Output_Box.Clear();
+            if (Input_File == Output_File)
+            {
+                string message = "Please change file name or path";
+                string title = "Error";
+                MessageBox.Show(message, title);
+
+
+                //DialogResult dialogResult = MessageBox.Show("Do you want to overwrite the current file?", "Error", MessageBoxButtons.YesNo);
+                //if (dialogResult == DialogResult.Yes)
+                //{
+                //    ConvertSetup();
+                //}
+                //else if (dialogResult == DialogResult.No)
+                //{
+                //    generateCMD();
+                //}
+
+            }
+
+            else { ConvertSetup(); }
+
+        }
+
+        private void ConvertSetup() //used to initiallise progress bar
+        {
             int i = 0;
             int CalcPer = 0;
             Conversion_Progress.Value = 0;
 
-
             foreach (string element in FFMPEG_CMD)
             {
-                ConvertFiles(element);
+                ConvertFiles(element); //converts files
                 ++i;
 
                 CalcPer = (int)(0.5f + ((100f * i) / FFMPEG_CMD.Count()));
 
                 Conversion_Progress.Maximum = 100;
                 Conversion_Progress.Value = CalcPer;
-
             }
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            FileExtension = Select_Extension.SelectedItem.ToString();
-            CMD_Output_Box.Text += FileExtension + Environment.NewLine;
         }
 
         private void Browse_Output_Button_Click(object sender, EventArgs e)
@@ -185,7 +199,24 @@ namespace FFMPEG_Video_Conveter
 
         private void Load_FFMPEG_Button_Click(object sender, EventArgs e)
         {
-            FFMPEG_Script_Box.Text = FFMPEG_String;
+            //x265 to x265 usually results in larger file...
+            //" -c:v hevc_nvenc " | straight nvec format conversion
+            //" -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 " //default x265 1080p
+            FFMPEG_Script_Box.Text = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
+        }
+
+        private void Suffix_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Suffix_TextBox.Visible = true;
+            Suffix_TextBox.Text = FileConvertedSuffix;
+
+        }
+
+        private void Prefix_CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Prefix_TextBox.Visible = true;
+            Prefix_TextBox.Text = FileConvertedPrefix;
+
         }
     }
 }
