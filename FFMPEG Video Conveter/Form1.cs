@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ using System.Windows.Forms;
 /// delete dragged in files
 /// 
 /// WORKING FUNCTIONALLY, UX KIND OF SHITTY
+/// added ffmpeg.exe to debug > bin should work for testing, not sure if that will work on proper build...
 /// END TODO
 
 namespace FFMPEG_Video_Conveter
@@ -20,7 +22,8 @@ namespace FFMPEG_Video_Conveter
         private string Input_File;
         private string Output_File;
 
-        private string FFMPEG_String;// = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
+        private string FFMPEG_String = " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
+        //C:\\Users\\Hamish\\source\\repos\\FFMPEG Video Conveter\\FFMPEG Video Conveter\\FFMPEG\\bin\\ffmpeg.exe
         private string FFMPEG_i = "/C ffmpeg -i ";
         private string FULL_CMD;
 
@@ -127,12 +130,16 @@ namespace FFMPEG_Video_Conveter
 
         private void ConvertFiles(string FFMPEG_Script)
         {
-            System.Diagnostics.Process StartCMD = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal/*Normal or Hidden*/;
+            Process StartCMD = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.WindowStyle = ProcessWindowStyle.Normal/*Normal or Hidden*/;
             startInfo.FileName = "cmd.exe";
-            startInfo.Arguments = FFMPEG_Script;
+
+            //startInfo.WorkingDirectory = @"C:\"; //how to
+
             StartCMD.StartInfo = startInfo;
+
+            startInfo.Arguments = FFMPEG_Script;
             StartCMD.Start();
             StartCMD.WaitForExit();
         }
