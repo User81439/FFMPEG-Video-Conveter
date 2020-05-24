@@ -11,15 +11,9 @@ using System.Windows.Forms;
 
 
 /// TODO:
-/// modify ffmpeg code to do batches
-///     could also put each convert into a loop
 ///   need progress displayed somewhere?
-///   function to edit the ffmpeg script 
 ///   organise and clean up code
 ///   
-/// finish up load ffmpeg script
-///     use superclass to inherit if changed?
-///     needs push back once edited
 ///     
 /// find out why Select_Extension (Form1.Designer) keeps removing index..;
 ///     this.Select_Extension.SelectedIndex = 0;
@@ -41,6 +35,9 @@ namespace FFMPEG_Video_Conveter
         private string FULL_CMD;
 
         private string[] FileNames;
+        //private string[] ;
+
+        List<string> FFMPEG_CMD = new List<string>();
 
         private string FileExtension;
         private string FileNameRAW;
@@ -116,21 +113,25 @@ namespace FFMPEG_Video_Conveter
                     FULL_CMD = FFMPEG_i + "\"" + Input_File + "\"" + FFMPEG_String + "\"" + Output_File + "\"" + Environment.NewLine
                         /*might need to remove for cmd; seems to be fine...*/;
 
-                    CMD_Output_Box.Text += FULL_CMD;
+                    FFMPEG_CMD.Add(FULL_CMD);
+
+                    CMD_Output_Box.Text += FFMPEG_CMD[i].ToString();
+
                 }
             }
 
         }
 
-        private void ConvertFiles()
+        private void ConvertFiles(string FFMPEG_Script)
         {
             System.Diagnostics.Process StartCMD = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal/*Normal or Hidden*/;
             startInfo.FileName = "cmd.exe";
-            startInfo.Arguments = FULL_CMD;
+            startInfo.Arguments = FFMPEG_Script;
             StartCMD.StartInfo = startInfo;
             StartCMD.Start();
+            StartCMD.WaitForExit();
 
         }
 
@@ -145,8 +146,19 @@ namespace FFMPEG_Video_Conveter
         private void button1_Click(object sender, EventArgs e)
         {
             //for (int i = 0; i < FileNames.Length; i++)
-            //{
-            ConvertFiles();
+            //{                     FFMPEG_CMD.Add(FULL_CMD);
+            int i = 0;
+            CMD_Output_Box.Clear();
+
+            foreach (string element in FFMPEG_CMD)
+            {
+                //CMD_Output_Box.Text += "\n\tdone\n" + i + element;
+
+                ConvertFiles(element);
+
+                i = ++i;
+            }
+            //ConvertFiles(i);
             //}
 
         }
