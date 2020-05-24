@@ -205,7 +205,7 @@ namespace FFMPEG_Video_Conveter
             //" -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 " //default x265 1080p
             //" " //plain container conversion //uses CPU not reccomended 
             //FFMPEG_Script_Box.Text = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
-            FFMPEG_Script_Box.Text = " -map_metadata - 1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
+            FFMPEG_Script_Box.Text = " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
             
         }
 
