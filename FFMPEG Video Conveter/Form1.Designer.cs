@@ -44,6 +44,7 @@ namespace FFMPEG_Video_Conveter
             this.Load_FFMPEG_Button = new System.Windows.Forms.Button();
             this.Load_FFMPEG_Label = new System.Windows.Forms.Label();
             this.FFMPEG_Script_Box = new System.Windows.Forms.TextBox();
+            this.Conversion_Progress = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // File_Input
@@ -52,7 +53,7 @@ namespace FFMPEG_Video_Conveter
             this.File_Input.FormattingEnabled = true;
             this.File_Input.Location = new System.Drawing.Point(12, 29);
             this.File_Input.Name = "File_Input";
-            this.File_Input.Size = new System.Drawing.Size(1289, 108);
+            this.File_Input.Size = new System.Drawing.Size(716, 108);
             this.File_Input.TabIndex = 0;
             this.File_Input.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.File_Input.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
@@ -62,7 +63,7 @@ namespace FFMPEG_Video_Conveter
             this.CMD_Output_Box.Location = new System.Drawing.Point(12, 167);
             this.CMD_Output_Box.Multiline = true;
             this.CMD_Output_Box.Name = "CMD_Output_Box";
-            this.CMD_Output_Box.Size = new System.Drawing.Size(1289, 174);
+            this.CMD_Output_Box.Size = new System.Drawing.Size(716, 112);
             this.CMD_Output_Box.TabIndex = 2;
             // 
             // Generate_Button
@@ -94,8 +95,6 @@ namespace FFMPEG_Video_Conveter
             ".mp4",
             ".mov"});
             this.Select_Extension.SelectedIndex = 0;
-            this.Select_Extension.SelectedItem = "mkv";
-            this.Select_Extension.SelectedText = "mkv";
             this.Select_Extension.Location = new System.Drawing.Point(139, 351);
             this.Select_Extension.Name = "Select_Extension";
             this.Select_Extension.Size = new System.Drawing.Size(75, 21);
@@ -144,7 +143,7 @@ namespace FFMPEG_Video_Conveter
             // 
             this.Output_Directory_Box.Location = new System.Drawing.Point(228, 386);
             this.Output_Directory_Box.Name = "Output_Directory_Box";
-            this.Output_Directory_Box.Size = new System.Drawing.Size(1073, 20);
+            this.Output_Directory_Box.Size = new System.Drawing.Size(500, 20);
             this.Output_Directory_Box.TabIndex = 10;
             // 
             // Browse_Output_Button
@@ -180,14 +179,22 @@ namespace FFMPEG_Video_Conveter
             // 
             this.FFMPEG_Script_Box.Location = new System.Drawing.Point(228, 422);
             this.FFMPEG_Script_Box.Name = "FFMPEG_Script_Box";
-            this.FFMPEG_Script_Box.Size = new System.Drawing.Size(1073, 20);
+            this.FFMPEG_Script_Box.Size = new System.Drawing.Size(500, 20);
             this.FFMPEG_Script_Box.TabIndex = 14;
+            // 
+            // Conversion_Progress
+            // 
+            this.Conversion_Progress.Location = new System.Drawing.Point(228, 520);
+            this.Conversion_Progress.Name = "Conversion_Progress";
+            this.Conversion_Progress.Size = new System.Drawing.Size(500, 23);
+            this.Conversion_Progress.TabIndex = 15;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1313, 555);
+            this.ClientSize = new System.Drawing.Size(737, 555);
+            this.Controls.Add(this.Conversion_Progress);
             this.Controls.Add(this.FFMPEG_Script_Box);
             this.Controls.Add(this.Load_FFMPEG_Label);
             this.Controls.Add(this.Load_FFMPEG_Button);
@@ -225,6 +232,7 @@ namespace FFMPEG_Video_Conveter
         private Button Load_FFMPEG_Button;
         private Label Load_FFMPEG_Label;
         private TextBox FFMPEG_Script_Box;
+        private ProgressBar Conversion_Progress;
     }
 }
 

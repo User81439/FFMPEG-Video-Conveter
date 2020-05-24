@@ -18,6 +18,8 @@ using System.Windows.Forms;
 /// find out why Select_Extension (Form1.Designer) keeps removing index..;
 ///     this.Select_Extension.SelectedIndex = 0;
 ///     
+/// find out why FFMPEG_String sometimes isnt set
+///     
 /// delete dragged in files
 /// 
 /// END TODO
@@ -145,21 +147,23 @@ namespace FFMPEG_Video_Conveter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //for (int i = 0; i < FileNames.Length; i++)
-            //{                     FFMPEG_CMD.Add(FULL_CMD);
-            int i = 0;
             CMD_Output_Box.Clear();
+            int i = 0;
+            int CalcPer = 0;
+            Conversion_Progress.Value = 0;
+
 
             foreach (string element in FFMPEG_CMD)
             {
-                //CMD_Output_Box.Text += "\n\tdone\n" + i + element;
-
                 ConvertFiles(element);
+                ++i;
 
-                i = ++i;
+                CalcPer = (int)(0.5f + ((100f * i) / FFMPEG_CMD.Count()));
+
+                Conversion_Progress.Maximum = 100;
+                Conversion_Progress.Value = CalcPer;
+
             }
-            //ConvertFiles(i);
-            //}
 
         }
 
