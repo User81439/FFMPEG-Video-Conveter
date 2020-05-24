@@ -20,7 +20,7 @@ namespace FFMPEG_Video_Conveter
         private string Input_File;
         private string Output_File;
 
-        private string FFMPEG_String = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
+        private string FFMPEG_String;// = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
         private string FFMPEG_i = "/C ffmpeg -i ";
         private string FULL_CMD;
 
@@ -48,7 +48,8 @@ namespace FFMPEG_Video_Conveter
 
         private void listBox1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
         {
-            Select_Extension.SelectedIndex = 0;
+            Select_Extension.SelectedIndex = 0; //sets default container, if not set crashes
+            File_Input.Items.Clear();
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.All;
             else
@@ -200,9 +201,12 @@ namespace FFMPEG_Video_Conveter
         private void Load_FFMPEG_Button_Click(object sender, EventArgs e)
         {
             //x265 to x265 usually results in larger file...
-            //" -c:v hevc_nvenc " | straight nvec format conversion
+            //" -c:v hevc_nvenc " //straight nvec format conversion
             //" -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 " //default x265 1080p
-            FFMPEG_Script_Box.Text = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
+            //" " //plain container conversion //uses CPU not reccomended 
+            //FFMPEG_Script_Box.Text = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
+            FFMPEG_Script_Box.Text = " -map_metadata - 1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
+            
         }
 
         private void Suffix_CheckBox_CheckedChanged(object sender, EventArgs e)
