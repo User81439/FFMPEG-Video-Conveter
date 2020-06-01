@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using Microsoft.WindowsAPICodePack.Dialogs;
+
 
 /// TODO:
 ///   organise and clean up code | -> convert to OO
@@ -13,6 +15,10 @@ using System.Windows.Forms;
 /// 
 /// WORKING FUNCTIONALLY, UX KIND OF SHITTY
 /// added ffmpeg.exe to debug > bin should work for testing, not sure if that will work on proper build...
+/// 
+/// this.Script_Select_Box.SelectedIndex = 0;
+/// 
+/// install ffmpeg to C and set up envirnoment variable? C:\ffmpeg\bin
 /// END TODO
 
 namespace FFMPEG_Video_Conveter
@@ -22,7 +28,7 @@ namespace FFMPEG_Video_Conveter
         private string Input_File;
         private string Output_File;
 
-        private string FFMPEG_String = " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
+        private string FFMPEG_String; //= " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ";
         //C:\\Users\\Hamish\\source\\repos\\FFMPEG Video Conveter\\FFMPEG Video Conveter\\FFMPEG\\bin\\ffmpeg.exe
         private string FFMPEG_i = "/C ffmpeg -i ";
         private string FULL_CMD;
@@ -37,11 +43,16 @@ namespace FFMPEG_Video_Conveter
         private string FileConvertedSuffix = " HEVC";
         private string FileConvertedPrefix = "example ";
 
-        FolderBrowserDialog outputBrowser = new FolderBrowserDialog();
+        //FolderBrowserDialog outputBrowser = new FolderBrowserDialog();
+        CommonOpenFileDialog outputBrowser = new CommonOpenFileDialog();
+
 
         public Form1()
         {
             InitializeComponent();
+            Script_Select_Box.SelectedIndex = 0;
+            Select_Extension.SelectedIndex = 0;
+
         }
 
         public void Main()
@@ -101,8 +112,8 @@ namespace FFMPEG_Video_Conveter
 
                     Output_File = GenerateOutput(Input_File);
 
-                    FULL_CMD = FFMPEG_i + "\"" + Input_File + "\"" + FFMPEG_String + "\"" + Output_File + "\"" + Environment.NewLine
-                        /*might need to remove for cmd; seems to be fine...*/;
+                    FULL_CMD = FFMPEG_i + "\"" + Input_File + "\"" + FFMPEG_String + "\"" + Output_File + "\""; //+ Environment.NewLine
+                        /*might need to remove for cmd; seems to be fine...*/
 
                     FFMPEG_CMD.Add(FULL_CMD);
 
@@ -114,19 +125,21 @@ namespace FFMPEG_Video_Conveter
             }
 
         }
-
+        #region set variables
         private void SetFileVariables()
         {
             FileExtension = Select_Extension.SelectedItem.ToString();
 
-            if (FFMPEG_Script_Box.Text != "") { FFMPEG_String = FFMPEG_Script_Box.Text; } //get changed script from script Load button box
+            if (Script_Select_Box.Visible == true) { FFMPEG_String = Script_Select_Box.SelectedItem.ToString(); } //gets default string from dropdown
+            else if (FFMPEG_Script_Box.Visible == true) { FFMPEG_String = FFMPEG_Script_Box.Text; } //gets custom script from text box
 
-            if (Output_Directory_Box.Text != "") { FileDirectory = outputBrowser.SelectedPath; } //get different output directory
+            if (Output_Directory_Box.Text != "") { FileDirectory = outputBrowser.FileName; } //get different output directory
 
             if (Prefix_CheckBox.Checked) { Suffix_TextBox.Visible = true;  FileConvertedPrefix = Prefix_TextBox.Text; } else { FileConvertedPrefix = ""; } //get file prefix
 
             if (Suffix_CheckBox.Checked) { FileConvertedSuffix = Suffix_TextBox.Text; } else { FileConvertedSuffix = ""; } //get file suffix
         }
+        #endregion
 
         private void ConvertFiles(string FFMPEG_Script)
         {
@@ -195,39 +208,87 @@ namespace FFMPEG_Video_Conveter
             }
         }
 
+        #region select output folder
         private void Browse_Output_Button_Click(object sender, EventArgs e)
         {
-            if (FileDirectory != null) { outputBrowser.SelectedPath = FileDirectory; }
+            outputBrowser.InitialDirectory = "C:\\Users";
+            outputBrowser.IsFolderPicker = true;
+            outputBrowser.Title = "Select Output Folder";
 
-            if (outputBrowser.ShowDialog() == DialogResult.OK)
+            //if (FileDirectory != null) { outputBrowser.FileName = FileDirectory; }
+
+            //if (outputBrowser.ShowDialog() == DialogResult.OK)
+            //{
+            //    Output_Directory_Box.Text = outputBrowser.SelectedPath;
+            //}
+
+            if (outputBrowser.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                Output_Directory_Box.Text = outputBrowser.SelectedPath;
+                Output_Directory_Box.Text = outputBrowser.FileName;
             }
-        }
 
-        private void Load_FFMPEG_Button_Click(object sender, EventArgs e)
-        {
-            //x265 to x265 usually results in larger file...
-            //" -c:v hevc_nvenc " //straight nvec format conversion
-            //" -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 " //default x265 1080p
-            //" " //plain container conversion //uses CPU not reccomended 
-            //FFMPEG_Script_Box.Text = " -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
-            FFMPEG_Script_Box.Text = " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 "; //loads default
-            
         }
+        #endregion
 
+        /// sets and gets suffix | not OO
+        #region suffix
         private void Suffix_CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            Suffix_TextBox.Visible = true;
-            Suffix_TextBox.Text = FileConvertedSuffix;
+            if (Suffix_CheckBox.Checked == true)
+            {
+                Suffix_TextBox.Visible = true;
+                Suffix_TextBox.Text = FileConvertedSuffix;
+            }
+
+            if (Suffix_CheckBox.Checked == false)
+            {
+                Suffix_TextBox.Visible = false;
+                FileConvertedSuffix = "";
+            }
 
         }
+        #endregion
 
+        /// sets and gets prefix | not OO
+        #region prefix
         private void Prefix_CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            Prefix_TextBox.Visible = true;
-            Prefix_TextBox.Text = FileConvertedPrefix;
+            if (Prefix_CheckBox.Checked == true)
+            {
+                Prefix_TextBox.Visible = true;
+                Prefix_TextBox.Text = FileConvertedPrefix;
+            }
+
+            if (Prefix_CheckBox.Checked == false)
+            {
+                Prefix_TextBox.Visible = false;
+                FileConvertedPrefix = "";
+            }
 
         }
+        #endregion 
+
+        /// gets script and/or sets custom script | not OO
+        #region custom script check
+        private void Script_Custom_Check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Script_Custom_Check.Checked == true)
+            {
+                FFMPEG_Script_Box.Visible = true;
+                Script_Select_Box.Visible = false;
+
+                FFMPEG_Script_Box.Text = Script_Select_Box.SelectedItem.ToString();
+
+            }
+
+            if (Script_Custom_Check.Checked == false)
+            {
+                FFMPEG_Script_Box.Visible = false;
+                Script_Select_Box.Visible = true;
+
+                FFMPEG_String = Script_Select_Box.SelectedItem.ToString();
+            }
+        }
+        #endregion
     }
 }

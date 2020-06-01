@@ -41,7 +41,6 @@ namespace FFMPEG_Video_Conveter
             this.Output_Directory_Label = new System.Windows.Forms.Label();
             this.Output_Directory_Box = new System.Windows.Forms.TextBox();
             this.Browse_Output_Button = new System.Windows.Forms.Button();
-            this.Load_FFMPEG_Button = new System.Windows.Forms.Button();
             this.Load_FFMPEG_Label = new System.Windows.Forms.Label();
             this.FFMPEG_Script_Box = new System.Windows.Forms.TextBox();
             this.Conversion_Progress = new System.Windows.Forms.ProgressBar();
@@ -49,6 +48,9 @@ namespace FFMPEG_Video_Conveter
             this.Prefix_CheckBox = new System.Windows.Forms.CheckBox();
             this.Suffix_TextBox = new System.Windows.Forms.TextBox();
             this.Prefix_TextBox = new System.Windows.Forms.TextBox();
+            this.Script_Custom_Check = new System.Windows.Forms.CheckBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.Script_Select_Box = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // File_Input
@@ -72,7 +74,7 @@ namespace FFMPEG_Video_Conveter
             // 
             // Generate_Button
             // 
-            this.Generate_Button.Location = new System.Drawing.Point(12, 520);
+            this.Generate_Button.Location = new System.Drawing.Point(12, 499);
             this.Generate_Button.Name = "Generate_Button";
             this.Generate_Button.Size = new System.Drawing.Size(75, 23);
             this.Generate_Button.TabIndex = 3;
@@ -82,7 +84,7 @@ namespace FFMPEG_Video_Conveter
             // 
             // Convert_Button
             // 
-            this.Convert_Button.Location = new System.Drawing.Point(139, 520);
+            this.Convert_Button.Location = new System.Drawing.Point(138, 499);
             this.Convert_Button.Name = "Convert_Button";
             this.Convert_Button.Size = new System.Drawing.Size(75, 23);
             this.Convert_Button.TabIndex = 4;
@@ -147,6 +149,7 @@ namespace FFMPEG_Video_Conveter
             // 
             this.Output_Directory_Box.Location = new System.Drawing.Point(228, 386);
             this.Output_Directory_Box.Name = "Output_Directory_Box";
+            this.Output_Directory_Box.ReadOnly = true;
             this.Output_Directory_Box.Size = new System.Drawing.Size(500, 20);
             this.Output_Directory_Box.TabIndex = 10;
             // 
@@ -160,16 +163,6 @@ namespace FFMPEG_Video_Conveter
             this.Browse_Output_Button.UseVisualStyleBackColor = true;
             this.Browse_Output_Button.Click += new System.EventHandler(this.Browse_Output_Button_Click);
             // 
-            // Load_FFMPEG_Button
-            // 
-            this.Load_FFMPEG_Button.Location = new System.Drawing.Point(138, 420);
-            this.Load_FFMPEG_Button.Name = "Load_FFMPEG_Button";
-            this.Load_FFMPEG_Button.Size = new System.Drawing.Size(75, 23);
-            this.Load_FFMPEG_Button.TabIndex = 12;
-            this.Load_FFMPEG_Button.Text = "Load";
-            this.Load_FFMPEG_Button.UseVisualStyleBackColor = true;
-            this.Load_FFMPEG_Button.Click += new System.EventHandler(this.Load_FFMPEG_Button_Click);
-            // 
             // Load_FFMPEG_Label
             // 
             this.Load_FFMPEG_Label.AutoSize = true;
@@ -181,14 +174,15 @@ namespace FFMPEG_Video_Conveter
             // 
             // FFMPEG_Script_Box
             // 
-            this.FFMPEG_Script_Box.Location = new System.Drawing.Point(228, 422);
+            this.FFMPEG_Script_Box.Location = new System.Drawing.Point(228, 420);
             this.FFMPEG_Script_Box.Name = "FFMPEG_Script_Box";
             this.FFMPEG_Script_Box.Size = new System.Drawing.Size(500, 20);
             this.FFMPEG_Script_Box.TabIndex = 14;
+            this.FFMPEG_Script_Box.Visible = false;
             // 
             // Conversion_Progress
             // 
-            this.Conversion_Progress.Location = new System.Drawing.Point(228, 520);
+            this.Conversion_Progress.Location = new System.Drawing.Point(225, 499);
             this.Conversion_Progress.Name = "Conversion_Progress";
             this.Conversion_Progress.Size = new System.Drawing.Size(500, 23);
             this.Conversion_Progress.TabIndex = 15;
@@ -196,7 +190,7 @@ namespace FFMPEG_Video_Conveter
             // Suffix_CheckBox
             // 
             this.Suffix_CheckBox.AutoSize = true;
-            this.Suffix_CheckBox.Location = new System.Drawing.Point(138, 450);
+            this.Suffix_CheckBox.Location = new System.Drawing.Point(138, 447);
             this.Suffix_CheckBox.Name = "Suffix_CheckBox";
             this.Suffix_CheckBox.Size = new System.Drawing.Size(52, 17);
             this.Suffix_CheckBox.TabIndex = 16;
@@ -207,7 +201,7 @@ namespace FFMPEG_Video_Conveter
             // Prefix_CheckBox
             // 
             this.Prefix_CheckBox.AutoSize = true;
-            this.Prefix_CheckBox.Location = new System.Drawing.Point(138, 474);
+            this.Prefix_CheckBox.Location = new System.Drawing.Point(138, 470);
             this.Prefix_CheckBox.Name = "Prefix_CheckBox";
             this.Prefix_CheckBox.Size = new System.Drawing.Size(52, 17);
             this.Prefix_CheckBox.TabIndex = 17;
@@ -217,7 +211,7 @@ namespace FFMPEG_Video_Conveter
             // 
             // Suffix_TextBox
             // 
-            this.Suffix_TextBox.Location = new System.Drawing.Point(228, 450);
+            this.Suffix_TextBox.Location = new System.Drawing.Point(225, 447);
             this.Suffix_TextBox.Name = "Suffix_TextBox";
             this.Suffix_TextBox.Size = new System.Drawing.Size(500, 20);
             this.Suffix_TextBox.TabIndex = 18;
@@ -225,17 +219,43 @@ namespace FFMPEG_Video_Conveter
             // 
             // Prefix_TextBox
             // 
-            this.Prefix_TextBox.Location = new System.Drawing.Point(228, 476);
+            this.Prefix_TextBox.Location = new System.Drawing.Point(225, 473);
             this.Prefix_TextBox.Name = "Prefix_TextBox";
             this.Prefix_TextBox.Size = new System.Drawing.Size(500, 20);
             this.Prefix_TextBox.TabIndex = 19;
             this.Prefix_TextBox.Visible = false;
             // 
+            // Script_Custom_Check
+            // 
+            this.Script_Custom_Check.AutoSize = true;
+            this.Script_Custom_Check.Location = new System.Drawing.Point(138, 424);
+            this.Script_Custom_Check.Name = "Script_Custom_Check";
+            this.Script_Custom_Check.Size = new System.Drawing.Size(61, 17);
+            this.Script_Custom_Check.TabIndex = 20;
+            this.Script_Custom_Check.Text = "Custom";
+            this.Script_Custom_Check.UseVisualStyleBackColor = true;
+            this.Script_Custom_Check.CheckedChanged += new System.EventHandler(this.Script_Custom_Check_CheckedChanged);
+            // 
+            // Script_Select_Box
+            // 
+            this.Script_Select_Box.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Script_Select_Box.FormattingEnabled = true;
+            this.Script_Select_Box.Items.AddRange(new object[] {
+            " -map_metadata -1 -c:v hevc_nvenc ",
+            " -map_metadata -1 -c:v hevc_nvenc -preset slow -x265-params pass=2 -crf 17 ",
+            " -map_metadata -1 "});
+            this.Script_Select_Box.Location = new System.Drawing.Point(228, 420);
+            this.Script_Select_Box.Name = "Script_Select_Box";
+            this.Script_Select_Box.Size = new System.Drawing.Size(500, 21);
+            this.Script_Select_Box.TabIndex = 21;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(737, 555);
+            this.ClientSize = new System.Drawing.Size(737, 536);
+            this.Controls.Add(this.Script_Select_Box);
+            this.Controls.Add(this.Script_Custom_Check);
             this.Controls.Add(this.Prefix_TextBox);
             this.Controls.Add(this.Suffix_TextBox);
             this.Controls.Add(this.Prefix_CheckBox);
@@ -243,7 +263,6 @@ namespace FFMPEG_Video_Conveter
             this.Controls.Add(this.Conversion_Progress);
             this.Controls.Add(this.FFMPEG_Script_Box);
             this.Controls.Add(this.Load_FFMPEG_Label);
-            this.Controls.Add(this.Load_FFMPEG_Button);
             this.Controls.Add(this.Browse_Output_Button);
             this.Controls.Add(this.Output_Directory_Box);
             this.Controls.Add(this.Output_Directory_Label);
@@ -275,7 +294,6 @@ namespace FFMPEG_Video_Conveter
         private System.Windows.Forms.Label Output_Directory_Label;
         private System.Windows.Forms.TextBox Output_Directory_Box;
         private System.Windows.Forms.Button Browse_Output_Button;
-        private Button Load_FFMPEG_Button;
         private Label Load_FFMPEG_Label;
         private TextBox FFMPEG_Script_Box;
         private ProgressBar Conversion_Progress;
@@ -283,6 +301,9 @@ namespace FFMPEG_Video_Conveter
         private CheckBox Prefix_CheckBox;
         private TextBox Suffix_TextBox;
         private TextBox Prefix_TextBox;
+        private CheckBox Script_Custom_Check;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private ComboBox Script_Select_Box;
     }
 }
 
