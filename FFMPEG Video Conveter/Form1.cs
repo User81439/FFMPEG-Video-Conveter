@@ -68,6 +68,8 @@ namespace FFMPEG_Video_Conveter
                 e.Effect = DragDropEffects.All;
             else
                 e.Effect = DragDropEffects.None;
+
+            //add set FileDirectory here to browse in file location before hitting generate
         }
 
         private void listBox1_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
@@ -211,16 +213,9 @@ namespace FFMPEG_Video_Conveter
         #region select output folder
         private void Browse_Output_Button_Click(object sender, EventArgs e)
         {
-            outputBrowser.InitialDirectory = "C:\\Users";
+            outputBrowser.InitialDirectory = FileDirectory;
             outputBrowser.IsFolderPicker = true;
             outputBrowser.Title = "Select Output Folder";
-
-            //if (FileDirectory != null) { outputBrowser.FileName = FileDirectory; }
-
-            //if (outputBrowser.ShowDialog() == DialogResult.OK)
-            //{
-            //    Output_Directory_Box.Text = outputBrowser.SelectedPath;
-            //}
 
             if (outputBrowser.ShowDialog() == CommonFileDialogResult.Ok)
             {
